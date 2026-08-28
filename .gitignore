@@ -1,0 +1,22 @@
+# Environment and secret files
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Generated output
+dist/
+coverage/
+
+# Logs
+*.log
+
+# Local editor settings
+.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini

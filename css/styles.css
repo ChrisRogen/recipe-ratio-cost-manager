@@ -1,0 +1,47 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+  color: #222222;
+  background-color: #ffffff;
+}
+
+header,
+main,
+footer {
+  padding: 1rem;
+}
+
+header {
+  border-bottom: 1px solid #cccccc;
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav a {
+  color: #005ea8;
+}
+
+nav a[aria-current="page"] {
+  font-weight: bold;
+  color: #222222;
+}
+
+main {
+  max-width: 900px;
+}
+
+footer {
+  border-top: 1px solid #cccccc;
+}
