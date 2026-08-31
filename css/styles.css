@@ -578,6 +578,194 @@ textarea[aria-invalid="true"] {
   color: var(--colour-muted);
 }
 
+.calculator-input-grid,
+.calculator-summary-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.quantity-unit-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(115px, 0.45fr);
+  gap: 0.65rem;
+}
+
+.calculator-summary-grid {
+  margin-bottom: 1rem;
+}
+
+.summary-card {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem;
+  border: 1px solid var(--colour-border);
+  border-radius: var(--radius-medium);
+  background: var(--colour-surface);
+  box-shadow: var(--shadow-small);
+}
+
+.summary-card span,
+.summary-card small {
+  color: var(--colour-muted);
+}
+
+.summary-card strong {
+  color: var(--colour-primary-dark);
+  font-size: 1.35rem;
+}
+
+.calculator-total {
+  color: var(--colour-primary-dark);
+  font-size: 1.25rem;
+}
+
+.calculator-table-wrap {
+  overflow-x: auto;
+}
+
+.calculator-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.calculator-table th,
+.calculator-table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid var(--colour-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.calculator-table thead th {
+  color: var(--colour-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.calculator-line-cost {
+  color: var(--colour-primary-dark);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.preparation-steps {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+  padding-left: 1.4rem;
+}
+
+.preparation-steps li {
+  padding-left: 0.35rem;
+}
+
+.import-drop-zone {
+  padding: 1rem;
+  border: 1px dashed var(--colour-border);
+  border-radius: var(--radius-small);
+  background: var(--colour-background);
+}
+
+.import-preview {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius-small);
+  background: var(--colour-background);
+}
+
+.import-preview p {
+  margin: 0.5rem 0 0;
+}
+
+.import-summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.import-errors {
+  margin: 0.75rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--colour-danger);
+}
+
+.business-live-summary {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.business-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.business-filter-actions input {
+  min-width: 145px;
+  flex: 1 1 145px;
+}
+
+.business-record-table td strong,
+.business-record-table td small {
+  display: block;
+}
+
+.table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.positive-value {
+  color: var(--colour-primary-dark);
+  font-weight: 800;
+}
+
+.negative-value {
+  color: var(--colour-danger) !important;
+}
+
+.business-entry-panel {
+  scroll-margin-top: 6rem;
+}
+
+.business-extra-costs {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--colour-border);
+  border-radius: var(--radius-small);
+  background: var(--colour-background);
+}
+
+.business-extra-costs summary {
+  cursor: pointer;
+  color: var(--colour-primary-dark);
+  font-weight: 800;
+}
+
+.business-extra-costs .form-grid {
+  margin-top: 1rem;
+}
+
+.business-detail-table {
+  min-width: 1750px;
+}
+
+.business-brands-cell {
+  min-width: 250px;
+  max-width: 360px;
+  white-space: normal;
+}
+
+.monthly-analysis-table {
+  min-width: 800px;
+}
+
 .toast {
   position: fixed;
   right: 1rem;
@@ -670,6 +858,19 @@ textarea[aria-invalid="true"] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .calculator-input-grid,
+  .calculator-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .business-live-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .business-filter-actions {
+    width: auto;
+  }
+
   .toast {
     right: 1.5rem;
     bottom: 1.5rem;
@@ -723,6 +924,14 @@ textarea[aria-invalid="true"] {
 
   body[data-page="dashboard"] > main > .card-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .calculator-summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .business-live-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

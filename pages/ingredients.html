@@ -12,6 +12,7 @@
   <title>Ingredients | Recipe Ratio & Cost Manager</title>
 
   <link rel="stylesheet" href="../css/styles.css">
+  <script src="../vendor/xlsx.full.min.js" defer></script>
   <script src="../js/app.js" defer></script>
 </head>
 
@@ -46,6 +47,8 @@
       >
         <a href="../index.html">Dashboard</a>
         <a href="recipes.html">Recipes</a>
+        <a href="calculator.html">Calculator</a>
+        <a href="business.html">Business</a>
         <a href="ingredients.html" aria-current="page">
           Ingredients
         </a>
@@ -267,6 +270,35 @@
           </button>
         </div>
       </form>
+    </section>
+
+    <section class="panel" id="ingredient-import-section">
+      <div class="panel-heading panel-heading-responsive">
+        <div>
+          <h2>Import ingredients</h2>
+          <p>Upload a CSV, XLSX or XLS file. Existing saved data will not be deleted or overwritten.</p>
+        </div>
+        <button class="button button-secondary button-small" id="download-ingredient-template" type="button">
+          Download CSV template
+        </button>
+      </div>
+
+      <div class="import-drop-zone">
+        <div class="form-field">
+          <label for="ingredient-import-file">Ingredient spreadsheet</label>
+          <input id="ingredient-import-file" type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+          <small>Use one row for each purchasing brand. Repeat the ingredient name to add another brand.</small>
+        </div>
+      </div>
+
+      <div id="ingredient-import-preview" class="import-preview" hidden></div>
+      <p id="ingredient-import-error" class="field-error" role="alert"></p>
+
+      <div class="form-actions">
+        <button class="button button-primary" id="confirm-ingredient-import" type="button" hidden>
+          Import valid rows
+        </button>
+      </div>
     </section>
 
     <section class="panel">

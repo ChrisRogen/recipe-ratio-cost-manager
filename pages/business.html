@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Monitor recipe production batches, costs, sales and monthly profit.">
+  <title>Business | Recipe Ratio & Cost Manager</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="../js/app.js?v=20260831-4" defer></script>
+  <script src="../js/business.js?v=20260831-4" defer></script>
+</head>
+<body data-page="business">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">R</span><span><strong>Recipe Ratio</strong><small>Cost Manager</small></span></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" data-menu-toggle><span aria-hidden="true">☰</span><span class="sr-only">Toggle navigation</span></button>
+      <nav id="main-navigation" class="main-navigation" aria-label="Main navigation" data-navigation>
+        <a href="../index.html">Dashboard</a><a href="recipes.html">Recipes</a><a href="calculator.html">Calculator</a><a href="business.html" aria-current="page">Business</a><a href="ingredients.html">Ingredients</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-container">
+    <section class="page-heading">
+      <div><p class="eyebrow">Business performance</p><h1>Production &amp; Sales</h1><p>Monitor recipe batches, preparation costs, sales and profit for the latest three calendar months.</p></div>
+      <button class="button button-primary" id="show-business-form" type="button">Add production batch</button>
+    </section>
+
+    <section class="calculator-summary-grid" id="business-summary" aria-label="Filtered business totals"></section>
+
+    <section class="panel" id="monthly-analysis-section">
+      <div class="panel-heading"><div><h2>Three-month analysis</h2><p>Current month and previous two calendar months. Older records are removed automatically.</p></div></div>
+      <div class="calculator-table-wrap">
+        <table class="calculator-table monthly-analysis-table">
+          <thead><tr><th>Month</th><th>Batches</th><th>Produced</th><th>Sold</th><th>Total cost</th><th>Revenue</th><th>Gross profit</th><th>Margin</th></tr></thead>
+          <tbody id="monthly-analysis-list"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel business-entry-panel" id="business-entry-section" hidden>
+      <div class="panel-heading panel-heading-responsive">
+        <div><h2 id="business-form-title">Add production batch</h2><p>Select the saved recipe, brands, final quantity and batch sales.</p></div>
+        <button class="button button-secondary button-small" id="close-business-form" type="button">Close</button>
+      </div>
+      <div id="business-no-recipes" class="empty-state" hidden><h3>No saved recipes available</h3><p>Create a recipe before recording production.</p><a class="button button-primary" href="recipes.html">Create recipe</a></div>
+      <form id="business-form" novalidate>
+        <input id="business-record-id" type="hidden">
+        <div class="form-grid">
+          <div class="form-field"><label for="business-date">Production date</label><input id="business-date" type="date" required></div>
+          <div class="form-field"><label for="business-batch">Batch number</label><input id="business-batch" type="text" maxlength="50" required></div>
+          <div class="form-field"><label for="business-recipe">Recipe</label><select id="business-recipe" required></select></div>
+          <div class="form-field"><label for="business-target">Required final quantity</label><div class="quantity-unit-group"><input id="business-target" type="number" min="0.001" step="0.001" inputmode="decimal" required><select id="business-target-unit" aria-label="Final quantity unit"></select></div></div>
+          <div class="form-field"><label for="business-units-produced">Sellable units produced</label><input id="business-units-produced" type="number" min="0.001" step="0.001" inputmode="decimal" required></div>
+          <div class="form-field"><label for="business-units-sold">Units sold from this batch</label><input id="business-units-sold" type="number" min="0" step="0.001" value="0" inputmode="decimal"></div>
+          <div class="form-field"><label for="business-selling-price">Selling price per unit (AUD)</label><input id="business-selling-price" type="number" min="0" step="0.0001" value="0" inputmode="decimal"></div>
+        </div>
+
+        <div class="subsection-heading"><div><h3>Brands used</h3><p>Choose the actual purchasing brand used for every recipe ingredient.</p></div></div>
+        <div class="calculator-table-wrap"><table class="calculator-table"><thead><tr><th>Ingredient</th><th>Required quantity</th><th>Brand</th><th>Cost</th></tr></thead><tbody id="business-ingredient-lines"></tbody></table></div>
+
+        <details class="business-extra-costs">
+          <summary>Additional production costs</summary>
+          <div class="form-grid">
+            <div class="form-field"><label for="business-packaging-unit">Packaging per produced unit (AUD)</label><input id="business-packaging-unit" type="number" min="0" step="0.0001" value="0" inputmode="decimal"></div>
+            <div class="form-field"><label for="business-labour-hours">Labour hours</label><input id="business-labour-hours" type="number" min="0" step="0.001" value="0" inputmode="decimal"></div>
+            <div class="form-field"><label for="business-labour-rate">Labour rate per hour (AUD)</label><input id="business-labour-rate" type="number" min="0" step="0.01" value="0" inputmode="decimal"></div>
+            <div class="form-field"><label for="business-overhead">Utilities and overhead (AUD)</label><input id="business-overhead" type="number" min="0" step="0.0001" value="0" inputmode="decimal"></div>
+            <div class="form-field"><label for="business-other-cost">Other batch costs (AUD)</label><input id="business-other-cost" type="number" min="0" step="0.0001" value="0" inputmode="decimal"></div>
+            <div class="form-field form-field-wide"><label for="business-notes">Notes</label><textarea id="business-notes" rows="3" maxlength="700" placeholder="Customer order, production result or sales notes"></textarea></div>
+          </div>
+        </details>
+
+        <p id="business-error" class="field-error form-error" role="alert"></p>
+        <div class="business-live-summary" id="business-live-summary"></div>
+        <div class="form-actions"><button class="button button-primary" type="submit">Save production batch</button><button class="button button-secondary" id="cancel-business-edit" type="button" hidden>Cancel editing</button></div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading panel-heading-responsive">
+        <div><h2>Production batch records</h2><p id="business-record-count">0 records</p></div>
+        <div class="business-filter-actions"><input id="business-date-from" type="date" aria-label="Filter from date"><input id="business-date-to" type="date" aria-label="Filter to date"><button class="button button-secondary button-small" id="export-business-csv" type="button">Download CSV</button><button class="button button-secondary button-small" id="export-business-json" type="button">Download JSON</button></div>
+      </div>
+      <div class="calculator-table-wrap">
+        <table class="calculator-table business-record-table business-detail-table">
+          <thead><tr><th>Date / batch</th><th>Recipe</th><th>Final quantity</th><th>Brands used</th><th>Produced</th><th>Sold</th><th>Remaining</th><th>Ingredient cost</th><th>Extra costs</th><th>Total cost</th><th>Sale price</th><th>Revenue</th><th>Gross profit</th><th>Margin</th><th>Actions</th></tr></thead>
+          <tbody id="business-record-list"></tbody>
+        </table>
+      </div>
+      <div id="business-empty" class="empty-state" hidden><h3>No production batches found</h3><p>Add a batch or change the date filter.</p></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="footer-inner"><p>&copy; <span data-current-year></span> Recipe Ratio &amp; Cost Manager</p><p>Rolling three-month local business records.</p></div></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

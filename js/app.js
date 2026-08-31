@@ -88,6 +88,7 @@ const UNIT_DETAILS = Object.freeze({
 });
 
 let toastTimer;
+let pendingIngredientImportRows = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   initializeCurrentYear();
@@ -136,7 +137,8 @@ function createEmptyApplicationData() {
   return {
     version: 2,
     ingredients: [],
-    recipes: []
+    recipes: [],
+    businessRecords: []
   };
 }
 
@@ -182,6 +184,8 @@ function normalizeRecipe(recipe) {
     category: cleanText(recipe.category) || "Uncategorized",
     baseYield: positiveNumber(recipe.baseYield),
     yieldUnit: cleanText(recipe.yieldUnit) || "g",
+    finalOutputDensityGPerMl:
+      nonNegativeNumber(recipe.finalOutputDensityGPerMl),
     basePreparationWeightG:
       positiveNumber(recipe.basePreparationWeightG),
     proportionalAllowancePercent:
@@ -225,7 +229,50 @@ function normalizeApplicationData(data) {
       : [],
     recipes: Array.isArray(safeData.recipes)
       ? safeData.recipes.map(normalizeRecipe)
+      : [],
+    businessRecords: Array.isArray(safeData.businessRecords)
+      ? safeData.businessRecords.map(normalizeBusinessRecord)
       : []
+  };
+}
+
+function normalizeBusinessRecord(record) {
+  return {
+    ...record,
+    id: cleanText(record.id) || createId("business"),
+    productionDate: cleanText(record.productionDate),
+    batchNumber: cleanText(record.batchNumber),
+    recipeId: cleanText(record.recipeId),
+    recipeName: cleanText(record.recipeName),
+    targetFinalG: positiveNumber(record.targetFinalG),
+    estimatedFinalG: positiveNumber(record.estimatedFinalG),
+    scaleFactor: positiveNumber(record.scaleFactor),
+    unitsProduced: nonNegativeNumber(record.unitsProduced),
+    unitsSold: nonNegativeNumber(record.unitsSold),
+    sellingPricePerUnit: nonNegativeNumber(record.sellingPricePerUnit),
+    ingredientCost: nonNegativeNumber(record.ingredientCost),
+    packagingCost: nonNegativeNumber(record.packagingCost),
+    packagingCostPerUnit:
+      nonNegativeNumber(record.packagingCostPerUnit),
+    labourCost: nonNegativeNumber(record.labourCost),
+    labourHours: nonNegativeNumber(record.labourHours),
+    labourRate: nonNegativeNumber(record.labourRate),
+    overheadCost: nonNegativeNumber(record.overheadCost),
+    otherCost: nonNegativeNumber(record.otherCost),
+    totalCost: nonNegativeNumber(record.totalCost),
+    revenue: nonNegativeNumber(record.revenue),
+    costPerUnit: nonNegativeNumber(record.costPerUnit),
+    costOfSoldUnits: nonNegativeNumber(record.costOfSoldUnits),
+    remainingStockValue: nonNegativeNumber(record.remainingStockValue),
+    realisedProfit: Number(record.realisedProfit) || 0,
+    soldUnitGrossProfit: Number(record.soldUnitGrossProfit) || 0,
+    marginPercent: Number(record.marginPercent) || 0,
+    ingredientLines: Array.isArray(record.ingredientLines)
+      ? record.ingredientLines
+      : [],
+    notes: cleanText(record.notes),
+    createdAt: record.createdAt || new Date().toISOString(),
+    updatedAt: record.updatedAt || new Date().toISOString()
   };
 }
 
@@ -294,6 +341,13 @@ function createId(prefix) {
 
 function cleanText(value) {
   return String(value ?? "").trim();
+}
+
+function normalizeIngredientLookupName(value) {
+  return cleanText(value)
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
 }
 
 function positiveNumber(value) {
@@ -616,8 +670,258 @@ function initializeIngredientPage() {
       });
     });
 
+  document
+    .getElementById("ingredient-import-file")
+    .addEventListener("change", handleIngredientImportFile);
+
+  document
+    .getElementById("confirm-ingredient-import")
+    .addEventListener("click", importPendingIngredients);
+
+  document
+    .getElementById("download-ingredient-template")
+    .addEventListener("click", downloadIngredientCsvTemplate);
+
   addBrandRow();
   renderIngredientList();
+}
+
+const INGREDIENT_IMPORT_HEADERS = Object.freeze([
+  "ingredient_name",
+  "category",
+  "default_unit",
+  "density_g_per_ml",
+  "preparation_yield_percent",
+  "prepared_weight_per_item_g",
+  "notes",
+  "brand_name",
+  "pack_quantity",
+  "pack_unit",
+  "purchase_price_aud",
+  "supplier"
+]);
+
+function downloadIngredientCsvTemplate() {
+  const exampleRows = [
+    INGREDIENT_IMPORT_HEADERS,
+    ["Fresh banana", "Fruit", "g", "1", "79.4", "99.25", "Remove skin before weighing", "Fresh banana", "1", "kg", "2.99", ""],
+    ["White flour Maida", "Baking", "g", "1", "100", "", "", "Black & Gold", "1", "kg", "1.75", "Coles"]
+  ];
+
+  const csv = exampleRows
+    .map((row) => row.map(csvEscapeValue).join(","))
+    .join("\r\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "ingredient-import-template.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function csvEscapeValue(value) {
+  const text = String(value ?? "");
+  return /[",\r\n]/.test(text)
+    ? `"${text.replaceAll('"', '""')}"`
+    : text;
+}
+
+async function handleIngredientImportFile(event) {
+  const file = event.target.files?.[0];
+  const errorElement = document.getElementById("ingredient-import-error");
+  const preview = document.getElementById("ingredient-import-preview");
+  const confirmButton = document.getElementById("confirm-ingredient-import");
+
+  pendingIngredientImportRows = [];
+  errorElement.textContent = "";
+  preview.hidden = true;
+  confirmButton.hidden = true;
+
+  if (!file) return;
+
+  try {
+    const extension = file.name.split(".").pop().toLowerCase();
+    let rows;
+
+    if (extension === "csv") {
+      rows = parseIngredientCsv(await file.text());
+    } else {
+      if (!window.XLSX) {
+        throw new Error("Excel support could not load. Check the internet connection or save the file as CSV.");
+      }
+
+      const workbook = XLSX.read(await file.arrayBuffer());
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      rows = XLSX.utils.sheet_to_json(firstSheet, { defval: "", raw: false });
+    }
+
+    pendingIngredientImportRows = validateIngredientImportRows(rows);
+    renderIngredientImportPreview(rows.length, pendingIngredientImportRows);
+    confirmButton.hidden = pendingIngredientImportRows.length === 0;
+  } catch (error) {
+    console.error("Unable to read ingredient import file.", error);
+    errorElement.textContent = error.message || "The spreadsheet could not be read.";
+  }
+}
+
+function parseIngredientCsv(text) {
+  const matrix = [];
+  let row = [];
+  let value = "";
+  let quoted = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index];
+
+    if (character === '"') {
+      if (quoted && text[index + 1] === '"') {
+        value += '"';
+        index += 1;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (character === "," && !quoted) {
+      row.push(value);
+      value = "";
+    } else if ((character === "\n" || character === "\r") && !quoted) {
+      if (character === "\r" && text[index + 1] === "\n") index += 1;
+      row.push(value);
+      if (row.some((cell) => cleanText(cell))) matrix.push(row);
+      row = [];
+      value = "";
+    } else {
+      value += character;
+    }
+  }
+
+  row.push(value);
+  if (row.some((cell) => cleanText(cell))) matrix.push(row);
+  if (matrix.length < 2) return [];
+
+  const headers = matrix[0].map((header) => cleanText(header).toLowerCase());
+  return matrix.slice(1).map((cells) => Object.fromEntries(
+    headers.map((header, index) => [header, cells[index] ?? ""])
+  ));
+}
+
+function validateIngredientImportRows(rows) {
+  return rows.map((source, index) => {
+    const row = Object.fromEntries(
+      Object.entries(source).map(([key, value]) => [cleanText(key).toLowerCase(), value])
+    );
+
+    const item = {
+      rowNumber: index + 2,
+      ingredientName: cleanText(row.ingredient_name),
+      category: cleanText(row.category) || "Uncategorized",
+      defaultUnit: cleanText(row.default_unit).toLowerCase() || "g",
+      densityGPerMl: positiveNumber(row.density_g_per_ml) || 1,
+      preparationYieldPercent: positiveNumber(row.preparation_yield_percent) || 100,
+      preparedWeightPerItemG: nonNegativeNumber(row.prepared_weight_per_item_g),
+      notes: cleanText(row.notes),
+      brandName: cleanText(row.brand_name),
+      packQuantity: positiveNumber(row.pack_quantity),
+      packUnit: cleanText(row.pack_unit).toLowerCase(),
+      price: nonNegativeNumber(row.purchase_price_aud),
+      supplier: cleanText(row.supplier),
+      errors: []
+    };
+
+    if (!item.ingredientName) item.errors.push("missing ingredient_name");
+    if (!UNIT_DETAILS[item.defaultUnit]) item.errors.push("invalid default_unit");
+    if (!item.brandName) item.errors.push("missing brand_name");
+    if (item.packQuantity <= 0) item.errors.push("invalid pack_quantity");
+    if (!UNIT_DETAILS[item.packUnit]) item.errors.push("invalid pack_unit");
+    if (cleanText(row.purchase_price_aud) === "" || Number(row.purchase_price_aud) < 0) item.errors.push("invalid purchase_price_aud");
+    if (item.preparationYieldPercent <= 0 || item.preparationYieldPercent > 100) item.errors.push("yield must be 0.001–100");
+    return item;
+  });
+}
+
+function renderIngredientImportPreview(totalRows, rows) {
+  const validRows = rows.filter((row) => row.errors.length === 0);
+  const invalidRows = rows.filter((row) => row.errors.length > 0);
+  const preview = document.getElementById("ingredient-import-preview");
+
+  preview.hidden = false;
+  preview.innerHTML = `
+    <div class="import-summary">
+      <strong>${validRows.length} valid row${validRows.length === 1 ? "" : "s"}</strong>
+      <span>${invalidRows.length} row${invalidRows.length === 1 ? "" : "s"} need correction</span>
+    </div>
+    ${invalidRows.length ? `<ul class="import-errors">${invalidRows.slice(0, 10).map((row) => `<li>Row ${row.rowNumber}: ${escapeHtml(row.errors.join(", "))}</li>`).join("")}</ul>` : `<p>All ${totalRows} rows are ready to import.</p>`}
+  `;
+}
+
+function importPendingIngredients() {
+  const validRows = pendingIngredientImportRows.filter((row) => row.errors.length === 0);
+  if (validRows.length === 0) return;
+
+  const data = getApplicationData();
+  let ingredientsAdded = 0;
+  let brandsAdded = 0;
+  let brandsSkipped = 0;
+
+  validRows.forEach((row) => {
+    const importedNameKey = normalizeIngredientLookupName(
+      row.ingredientName
+    );
+
+    let ingredient = data.ingredients.find(
+      (item) =>
+        normalizeIngredientLookupName(item.name) ===
+        importedNameKey
+    );
+
+    if (!ingredient) {
+      ingredient = normalizeIngredient({
+        id: createId("ingredient"),
+        name: row.ingredientName,
+        category: row.category,
+        defaultUnit: row.defaultUnit,
+        densityGPerMl: row.densityGPerMl,
+        preparationYieldPercent: row.preparationYieldPercent,
+        preparedWeightPerItemG: row.preparedWeightPerItemG,
+        notes: row.notes,
+        brands: []
+      });
+      data.ingredients.push(ingredient);
+      ingredientsAdded += 1;
+    }
+
+    const duplicateBrand = ingredient.brands.some((brand) =>
+      brand.name.toLowerCase() === row.brandName.toLowerCase() &&
+      brand.supplier.toLowerCase() === row.supplier.toLowerCase()
+    );
+
+    if (duplicateBrand) {
+      brandsSkipped += 1;
+      return;
+    }
+
+    ingredient.brands.push({
+      id: createId("brand"),
+      name: row.brandName,
+      packQuantity: row.packQuantity,
+      packUnit: row.packUnit,
+      price: row.price,
+      supplier: row.supplier
+    });
+    ingredient.updatedAt = new Date().toISOString();
+    brandsAdded += 1;
+  });
+
+  data.ingredients.sort((first, second) => first.name.localeCompare(second.name));
+  if (!saveApplicationData(data)) return;
+
+  pendingIngredientImportRows = [];
+  document.getElementById("ingredient-import-file").value = "";
+  document.getElementById("ingredient-import-preview").hidden = true;
+  document.getElementById("confirm-ingredient-import").hidden = true;
+  renderIngredientList(document.getElementById("ingredient-search").value);
+  showToast(`${ingredientsAdded} ingredients and ${brandsAdded} brands imported. ${brandsSkipped} matching brands skipped.`);
 }
 
 function createBrandRowMarkup(brand = {}) {

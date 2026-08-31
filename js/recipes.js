@@ -804,6 +804,8 @@ function handleRecipeSubmit(event) {
     baseYield:
       document.getElementById("recipe-base-yield").value,
     yieldUnit: "g",
+    finalOutputDensityGPerMl:
+      document.getElementById("final-output-density").value,
     basePreparationWeightG:
       document.getElementById(
         "base-preparation-weight"
@@ -892,6 +894,7 @@ function resetRecipeForm() {
     "10";
   document.getElementById("fixed-handling-loss").value =
     "50";
+  document.getElementById("final-output-density").value = "";
   document.getElementById("reference-prepared-unit").value =
     "g";
   document.getElementById("recipe-form-title").textContent =
@@ -1378,6 +1381,8 @@ function startRecipeEdit(recipeId) {
   document.getElementById(
     "base-preparation-weight"
   ).value = recipe.basePreparationWeightG;
+  document.getElementById("final-output-density").value =
+    recipe.finalOutputDensityGPerMl || "";
   document.getElementById(
     "proportional-allowance"
   ).value = recipe.proportionalAllowancePercent;

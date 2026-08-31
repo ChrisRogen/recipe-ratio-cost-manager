@@ -63,6 +63,10 @@ function renderDashboard() {
     "dashboard-conversion-count"
   ).textContent = String(convertedIngredientCount);
 
+  document.getElementById(
+    "dashboard-business-count"
+  ).textContent = String(data.businessRecords.length);
+
   renderRecentIngredients(data.ingredients);
   renderRecentRecipes(data.recipes);
 }

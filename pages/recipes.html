@@ -49,6 +49,8 @@
         <a href="recipes.html" aria-current="page">
           Recipes
         </a>
+        <a href="calculator.html">Calculator</a>
+        <a href="business.html">Business</a>
         <a href="ingredients.html">Ingredients</a>
       </nav>
     </div>
@@ -165,6 +167,25 @@
               placeholder="1703"
               required
             >
+          </div>
+
+          <div class="form-field">
+            <label for="final-output-density">
+              Final product density (g/ml)
+            </label>
+
+            <input
+              id="final-output-density"
+              type="number"
+              min="0"
+              step="0.001"
+              inputmode="decimal"
+              placeholder="Optional"
+            >
+
+            <small>
+              Required only when final output will be entered in ml or L.
+            </small>
           </div>
 
           <div class="form-field">
