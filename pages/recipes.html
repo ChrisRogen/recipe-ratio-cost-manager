@@ -3,30 +3,460 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Create recipes, scale preparation quantities and calculate ingredient costs."
+  >
+
   <title>Recipes | Recipe Ratio & Cost Manager</title>
+
   <link rel="stylesheet" href="../css/styles.css">
   <script src="../js/app.js" defer></script>
+  <script src="../js/recipes.js" defer></script>
 </head>
-<body>
-  <header>
-    <h1>Recipe Ratio & Cost Manager</h1>
 
-    <nav aria-label="Main navigation">
-      <ul>
-        <li><a href="../index.html">Home</a></li>
-        <li><a href="recipes.html" aria-current="page">Recipes</a></li>
-        <li><a href="ingredients.html">Ingredients</a></li>
-      </ul>
-    </nav>
+<body data-page="recipes">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark" aria-hidden="true">R</span>
+
+        <span>
+          <strong>Recipe Ratio</strong>
+          <small>Cost Manager</small>
+        </span>
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="main-navigation"
+        data-menu-toggle
+      >
+        <span aria-hidden="true">☰</span>
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+
+      <nav
+        id="main-navigation"
+        class="main-navigation"
+        aria-label="Main navigation"
+        data-navigation
+      >
+        <a href="../index.html">Dashboard</a>
+        <a href="recipes.html" aria-current="page">
+          Recipes
+        </a>
+        <a href="calculator.html">Calculator</a>
+        <a href="business.html">Business</a>
+        <a href="ingredients.html">Ingredients</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <h2>Recipes</h2>
-    <p>Recipe management will be implemented in a later development phase.</p>
+  <main class="page-container">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">Advanced recipe calculations</p>
+        <h1>Recipes</h1>
+
+        <p>
+          Scale by required final output, reference ingredient count
+          or prepared ingredient quantity.
+        </p>
+      </div>
+
+      <button
+        class="button button-primary"
+        type="button"
+        data-scroll-to-recipe-form
+      >
+        Add recipe
+      </button>
+    </section>
+
+    <section class="panel" id="recipe-form-section">
+      <div class="panel-heading">
+        <div>
+          <h2 id="recipe-form-title">Add recipe</h2>
+
+          <p>
+            Quantities accept values as small as 0.001.
+          </p>
+        </div>
+      </div>
+
+      <div id="recipe-no-ingredients" class="empty-state" hidden>
+        <h3>Add ingredients before creating a recipe</h3>
+
+        <p>
+          Recipes require ingredients and purchasing prices.
+        </p>
+
+        <a class="button button-primary" href="ingredients.html">
+          Go to Ingredients
+        </a>
+      </div>
+
+      <form id="recipe-form" novalidate>
+        <input id="recipe-id" type="hidden">
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="recipe-name">Recipe name</label>
+
+            <input
+              id="recipe-name"
+              type="text"
+              maxlength="100"
+              placeholder="Example: Banana Cake"
+              required
+            >
+
+            <small
+              class="field-error"
+              data-error-for="recipe-name"
+            ></small>
+          </div>
+
+          <div class="form-field">
+            <label for="recipe-category">Category</label>
+
+            <input
+              id="recipe-category"
+              type="text"
+              maxlength="50"
+              placeholder="Example: Cake"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="recipe-base-yield">
+              Base final output quantity (g)
+            </label>
+
+            <input
+              id="recipe-base-yield"
+              type="number"
+              min="0.001"
+              step="0.001"
+              inputmode="decimal"
+              placeholder="1554"
+              required
+            >
+
+            <small
+              class="field-error"
+              data-error-for="recipe-base-yield"
+            ></small>
+          </div>
+
+          <div class="form-field">
+            <label for="base-preparation-weight">
+              Base preparation/batter target (g)
+            </label>
+
+            <input
+              id="base-preparation-weight"
+              type="number"
+              min="0.001"
+              step="0.001"
+              inputmode="decimal"
+              placeholder="1703"
+              required
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="final-output-density">
+              Final product density (g/ml)
+            </label>
+
+            <input
+              id="final-output-density"
+              type="number"
+              min="0"
+              step="0.001"
+              inputmode="decimal"
+              placeholder="Optional"
+            >
+
+            <small>
+              Required only when final output will be entered in ml or L.
+            </small>
+          </div>
+
+          <div class="form-field">
+            <label for="proportional-allowance">
+              Proportional allowance (%)
+            </label>
+
+            <input
+              id="proportional-allowance"
+              type="number"
+              min="0"
+              step="0.001"
+              inputmode="decimal"
+              value="10"
+              required
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="fixed-handling-loss">
+              Fixed handling loss (g)
+            </label>
+
+            <input
+              id="fixed-handling-loss"
+              type="number"
+              min="0"
+              step="0.001"
+              inputmode="decimal"
+              value="50"
+              required
+            >
+          </div>
+
+          <div class="form-field form-field-wide">
+            <label for="recipe-notes">Recipe notes</label>
+
+            <textarea
+              id="recipe-notes"
+              rows="3"
+              maxlength="700"
+              placeholder="Optional production, baking or storage notes"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="subsection-heading">
+          <div>
+            <h3>Reference ingredient scaling</h3>
+
+            <p>
+              Used to scale by banana count or peeled banana
+              quantity.
+            </p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="reference-ingredient">
+              Reference ingredient
+            </label>
+
+            <select id="reference-ingredient"></select>
+          </div>
+
+          <div class="form-field">
+            <label for="reference-count">
+              Base reference count
+            </label>
+
+            <input
+              id="reference-count"
+              type="number"
+              min="0.001"
+              step="0.001"
+              inputmode="decimal"
+              placeholder="4"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="reference-prepared-quantity">
+              Base prepared quantity
+            </label>
+
+            <input
+              id="reference-prepared-quantity"
+              type="number"
+              min="0.001"
+              step="0.001"
+              inputmode="decimal"
+              placeholder="397"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="reference-prepared-unit">
+              Prepared quantity unit
+            </label>
+
+            <select id="reference-prepared-unit">
+              <option value="ug">Micrograms (µg)</option>
+              <option value="mg">Milligrams (mg)</option>
+              <option value="g" selected>Grams (g)</option>
+              <option value="kg">Kilograms (kg)</option>
+              <option value="ul">Microlitres (µL)</option>
+              <option value="ml">Millilitres (ml)</option>
+              <option value="l">Litres (L)</option>
+              <option value="drop">Drops</option>
+              <option value="tsp">Teaspoons</option>
+              <option value="tbsp">
+                Australian tablespoons
+              </option>
+              <option value="cup">Australian cups</option>
+              <option value="each">Each</option>
+              <option value="piece">Pieces</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="subsection-heading">
+          <div>
+            <h3>Recipe ingredients</h3>
+
+            <p>
+              Preparation units may differ from purchasing units.
+            </p>
+          </div>
+
+          <button
+            class="button button-secondary button-small"
+            id="add-recipe-ingredient"
+            type="button"
+          >
+            Add ingredient
+          </button>
+        </div>
+
+        <div
+          id="recipe-ingredient-rows"
+          class="brand-rows"
+        ></div>
+
+        <p
+          class="field-error form-error"
+          id="recipe-ingredients-error"
+        ></p>
+
+        <div class="subsection-heading">
+          <div>
+            <h3>Preparation steps</h3>
+
+            <p>
+              Store instructions in their correct order.
+            </p>
+          </div>
+
+          <button
+            class="button button-secondary button-small"
+            id="add-recipe-step"
+            type="button"
+          >
+            Add step
+          </button>
+        </div>
+
+        <div id="recipe-step-rows" class="brand-rows"></div>
+
+        <p
+          class="field-error form-error"
+          id="recipe-steps-error"
+        ></p>
+
+        <div class="subsection-heading">
+          <div>
+            <h3>Production batches</h3>
+
+            <p>
+              Track batter input and final output for each batch.
+            </p>
+          </div>
+
+          <button
+            class="button button-secondary button-small"
+            id="add-batch"
+            type="button"
+          >
+            Add batch
+          </button>
+        </div>
+
+        <div id="batch-rows" class="brand-rows"></div>
+
+        <p
+          class="calculated-price"
+          id="batch-total-summary"
+        ></p>
+
+        <div class="form-actions">
+          <button class="button button-primary" type="submit">
+            Save recipe
+          </button>
+
+          <button
+            class="button button-secondary"
+            id="cancel-recipe-edit"
+            type="button"
+            hidden
+          >
+            Cancel editing
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading panel-heading-responsive">
+        <div>
+          <h2>Saved recipes</h2>
+          <p id="recipe-count">0 recipes</p>
+        </div>
+
+        <div class="search-field">
+          <label class="sr-only" for="recipe-search">
+            Search recipes
+          </label>
+
+          <input
+            id="recipe-search"
+            type="search"
+            placeholder="Search by recipe or category"
+          >
+        </div>
+      </div>
+
+      <div
+        id="recipe-list"
+        class="card-grid"
+        aria-live="polite"
+      ></div>
+
+      <div id="recipe-empty-state" class="empty-state" hidden>
+        <h3>No recipes found</h3>
+
+        <p>
+          Create your first recipe or change the search.
+        </p>
+      </div>
+    </section>
   </main>
 
-  <footer>
-    <p>&copy; <span data-current-year></span> Recipe Ratio & Cost Manager</p>
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>
+        &copy; <span data-current-year></span>
+        Recipe Ratio &amp; Cost Manager
+      </p>
+
+      <p>
+        Density, preparation yield and processing loss included.
+      </p>
+    </div>
   </footer>
 </body>
 </html>
