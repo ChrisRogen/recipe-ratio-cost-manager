@@ -1,20 +1,45 @@
 # Recipe Ratio & Cost Manager
 
-A personal web application for storing recipes, scaling ingredient quantities, managing ingredient brands and purchasing prices, calculating recipe costs, and recording preparation steps.
+A responsive personal web application for managing ingredient purchasing prices, preparation conversions, recipes, production loss, scaled quantities and recipe costs.
 
-## Current Development Stage
+## Core Features
 
-The project is currently in the initial repository and local development environment setup stage.
+### Ingredient Management
 
-Recipe management, quantity calculations, pricing logic, database integration, advanced styling, animations, and deployment have not been implemented yet.
+- Create, edit, search and delete ingredients
+- Store multiple brands or suppliers
+- Record pack quantity, pack unit and purchasing price
+- Compare normalized purchase prices
+- Store ingredient density in grams per millilitre
+- Store preparation or edible-yield percentage
+- Store prepared weight per item
+- Prevent deletion when an ingredient is used by a recipe
 
-## Planned Technology Stack
+### Supported Measurements
 
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- Supabase in a later development phase
+Mass:
 
-## Development Approach
+- Micrograms (`µg`)
+- Milligrams (`mg`)
+- Grams (`g`)
+- Kilograms (`kg`)
 
-Functionality will be developed and verified before visual refinement. GitHub is the authoritative source for the current project code.
+Volume:
+
+- Microlitres (`µL`)
+- Millilitres (`ml`)
+- Litres (`L`)
+- Drops
+- Teaspoons
+- Australian tablespoons
+- Australian cups
+
+Count:
+
+- Each
+- Pieces
+
+Quantity inputs support values as small as:
+
+```text
+0.001

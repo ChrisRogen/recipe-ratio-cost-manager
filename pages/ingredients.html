@@ -3,30 +3,327 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Manage ingredients, preparation conversions, brands and purchasing prices."
+  >
+
   <title>Ingredients | Recipe Ratio & Cost Manager</title>
+
   <link rel="stylesheet" href="../css/styles.css">
   <script src="../js/app.js" defer></script>
 </head>
-<body>
-  <header>
-    <h1>Recipe Ratio & Cost Manager</h1>
 
-    <nav aria-label="Main navigation">
-      <ul>
-        <li><a href="../index.html">Home</a></li>
-        <li><a href="recipes.html">Recipes</a></li>
-        <li><a href="ingredients.html" aria-current="page">Ingredients</a></li>
-      </ul>
-    </nav>
+<body data-page="ingredients">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark" aria-hidden="true">R</span>
+
+        <span>
+          <strong>Recipe Ratio</strong>
+          <small>Cost Manager</small>
+        </span>
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="main-navigation"
+        data-menu-toggle
+      >
+        <span aria-hidden="true">☰</span>
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+
+      <nav
+        id="main-navigation"
+        class="main-navigation"
+        aria-label="Main navigation"
+        data-navigation
+      >
+        <a href="../index.html">Dashboard</a>
+        <a href="recipes.html">Recipes</a>
+        <a href="ingredients.html" aria-current="page">
+          Ingredients
+        </a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <h2>Ingredients</h2>
-    <p>Ingredient management will be implemented in a later development phase.</p>
+  <main class="page-container">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">Purchasing and preparation data</p>
+        <h1>Ingredients</h1>
+
+        <p>
+          Store purchasing prices and the conversions required for
+          preparation quantities, trimming loss, density and item counts.
+        </p>
+      </div>
+
+      <button
+        class="button button-primary"
+        type="button"
+        data-scroll-to-form
+      >
+        Add ingredient
+      </button>
+    </section>
+
+    <section class="panel" id="ingredient-form-section">
+      <div class="panel-heading">
+        <div>
+          <h2 id="ingredient-form-title">Add ingredient</h2>
+
+          <p>
+            Quantity fields accept values as small as 0.001.
+          </p>
+        </div>
+      </div>
+
+      <form id="ingredient-form" novalidate>
+        <input id="ingredient-id" type="hidden">
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="ingredient-name">Ingredient name</label>
+
+            <input
+              id="ingredient-name"
+              type="text"
+              maxlength="100"
+              placeholder="Example: Fresh banana"
+              required
+            >
+
+            <small
+              class="field-error"
+              data-error-for="ingredient-name"
+            ></small>
+          </div>
+
+          <div class="form-field">
+            <label for="ingredient-category">Category</label>
+
+            <input
+              id="ingredient-category"
+              type="text"
+              maxlength="50"
+              placeholder="Example: Fruit"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="ingredient-unit">
+              Default preparation unit
+            </label>
+
+            <select id="ingredient-unit" required>
+              <optgroup label="Mass">
+                <option value="ug">Micrograms (µg)</option>
+                <option value="mg">Milligrams (mg)</option>
+                <option value="g" selected>Grams (g)</option>
+                <option value="kg">Kilograms (kg)</option>
+              </optgroup>
+
+              <optgroup label="Volume">
+                <option value="ul">Microlitres (µL)</option>
+                <option value="ml">Millilitres (ml)</option>
+                <option value="l">Litres (L)</option>
+                <option value="drop">Drops</option>
+                <option value="tsp">Teaspoons</option>
+                <option value="tbsp">
+                  Australian tablespoons
+                </option>
+                <option value="cup">Australian cups</option>
+              </optgroup>
+
+              <optgroup label="Count">
+                <option value="each">Each</option>
+                <option value="piece">Pieces</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="ingredient-density">
+              Density in g/ml
+            </label>
+
+            <input
+              id="ingredient-density"
+              type="number"
+              min="0.001"
+              step="0.001"
+              inputmode="decimal"
+              value="1"
+              required
+            >
+
+            <small>
+              Used when preparation is measured by weight but the
+              product is purchased by volume, or the reverse.
+            </small>
+          </div>
+
+          <div class="form-field">
+            <label for="ingredient-yield">
+              Preparation yield percentage
+            </label>
+
+            <input
+              id="ingredient-yield"
+              type="number"
+              min="0.001"
+              max="100"
+              step="0.001"
+              inputmode="decimal"
+              value="100"
+              required
+            >
+
+            <small>
+              Example: banana yield is 79.4% after removing skin.
+            </small>
+          </div>
+
+          <div class="form-field">
+            <label for="ingredient-item-weight">
+              Prepared weight per item in grams
+            </label>
+
+            <input
+              id="ingredient-item-weight"
+              type="number"
+              min="0"
+              step="0.001"
+              inputmode="decimal"
+              placeholder="Example: 99.25"
+            >
+
+            <small>
+              Optional. Required when scaling or costing by item count.
+            </small>
+          </div>
+
+          <div class="form-field form-field-wide">
+            <label for="ingredient-notes">Notes</label>
+
+            <textarea
+              id="ingredient-notes"
+              rows="3"
+              maxlength="500"
+              placeholder="Optional storage, quality, density or preparation notes"
+            ></textarea>
+          </div>
+        </div>
+
+        <p
+          class="field-error form-error"
+          id="conversion-form-error"
+        ></p>
+
+        <div class="subsection-heading">
+          <div>
+            <h3>Brands and purchasing prices</h3>
+
+            <p>
+              Add one or more pack sizes, brands or suppliers.
+            </p>
+          </div>
+
+          <button
+            class="button button-secondary button-small"
+            id="add-brand-button"
+            type="button"
+          >
+            Add purchasing option
+          </button>
+        </div>
+
+        <div id="brand-rows" class="brand-rows"></div>
+
+        <p
+          class="field-error form-error"
+          id="brand-form-error"
+        ></p>
+
+        <div class="form-actions">
+          <button class="button button-primary" type="submit">
+            Save ingredient
+          </button>
+
+          <button
+            class="button button-secondary"
+            id="cancel-ingredient-edit"
+            type="button"
+            hidden
+          >
+            Cancel editing
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading panel-heading-responsive">
+        <div>
+          <h2>Saved ingredients</h2>
+          <p id="ingredient-count">0 ingredients</p>
+        </div>
+
+        <div class="search-field">
+          <label class="sr-only" for="ingredient-search">
+            Search ingredients
+          </label>
+
+          <input
+            id="ingredient-search"
+            type="search"
+            placeholder="Search by ingredient, category or brand"
+          >
+        </div>
+      </div>
+
+      <div
+        id="ingredient-list"
+        class="card-grid"
+        aria-live="polite"
+      ></div>
+
+      <div id="ingredient-empty-state" class="empty-state" hidden>
+        <h3>No ingredients found</h3>
+
+        <p>
+          Add your first ingredient or change the current search.
+        </p>
+      </div>
+    </section>
   </main>
 
-  <footer>
-    <p>&copy; <span data-current-year></span> Recipe Ratio & Cost Manager</p>
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>
+        &copy; <span data-current-year></span>
+        Recipe Ratio &amp; Cost Manager
+      </p>
+
+      <p>
+        Metric and Australian kitchen measurements supported.
+      </p>
+    </div>
   </footer>
 </body>
 </html>

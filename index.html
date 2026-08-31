@@ -3,33 +3,390 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home | Recipe Ratio & Cost Manager</title>
+
+  <meta
+    name="description"
+    content="Recipe scaling, preparation conversion, purchasing and recipe cost management."
+  >
+
+  <title>Dashboard | Recipe Ratio & Cost Manager</title>
+
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/app.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
 </head>
-<body>
-  <header>
-    <h1>Recipe Ratio & Cost Manager</h1>
 
-    <nav aria-label="Main navigation">
-      <ul>
-        <li><a href="index.html" aria-current="page">Home</a></li>
-        <li><a href="pages/recipes.html">Recipes</a></li>
-        <li><a href="pages/ingredients.html">Ingredients</a></li>
-      </ul>
-    </nav>
+<body data-page="dashboard">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">R</span>
+
+        <span>
+          <strong>Recipe Ratio</strong>
+          <small>Cost Manager</small>
+        </span>
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="main-navigation"
+        data-menu-toggle
+      >
+        <span aria-hidden="true">☰</span>
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+
+      <nav
+        id="main-navigation"
+        class="main-navigation"
+        aria-label="Main navigation"
+        data-navigation
+      >
+        <a href="index.html" aria-current="page">
+          Dashboard
+        </a>
+
+        <a href="pages/recipes.html">Recipes</a>
+        <a href="pages/ingredients.html">Ingredients</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <h2>Project Setup</h2>
-    <p>
-      The initial application structure is working. Recipe features will be
-      developed in a later phase.
-    </p>
+  <main class="page-container">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">Recipe workspace</p>
+        <h1>Dashboard</h1>
+
+        <p>
+          Manage purchase prices, preparation conversions,
+          production loss, recipe cost and scaled quantities.
+        </p>
+      </div>
+
+      <a
+        class="button button-primary"
+        href="pages/recipes.html"
+      >
+        Create recipe
+      </a>
+    </section>
+
+    <section
+      class="card-grid"
+      aria-label="Application summary"
+    >
+      <article class="ingredient-card">
+        <div class="ingredient-card-header">
+          <div>
+            <p>Ingredients</p>
+            <h2 id="dashboard-ingredient-count">0</h2>
+          </div>
+
+          <span class="unit-badge">Stored</span>
+        </div>
+
+        <div class="ingredient-card-body">
+          <p class="ingredient-notes">
+            Ingredients available for recipe preparation.
+          </p>
+
+          <a
+            class="button button-secondary button-small"
+            href="pages/ingredients.html"
+          >
+            Manage ingredients
+          </a>
+        </div>
+      </article>
+
+      <article class="ingredient-card">
+        <div class="ingredient-card-header">
+          <div>
+            <p>Purchasing options</p>
+            <h2 id="dashboard-brand-count">0</h2>
+          </div>
+
+          <span class="unit-badge">Prices</span>
+        </div>
+
+        <div class="ingredient-card-body">
+          <p class="ingredient-notes">
+            Brand, supplier, pack-size and purchasing prices.
+          </p>
+
+          <a
+            class="button button-secondary button-small"
+            href="pages/ingredients.html"
+          >
+            Review prices
+          </a>
+        </div>
+      </article>
+
+      <article class="ingredient-card">
+        <div class="ingredient-card-header">
+          <div>
+            <p>Recipes</p>
+            <h2 id="dashboard-recipe-count">0</h2>
+          </div>
+
+          <span class="unit-badge">Saved</span>
+        </div>
+
+        <div class="ingredient-card-body">
+          <p class="ingredient-notes">
+            Recipes available for scaling and costing.
+          </p>
+
+          <a
+            class="button button-secondary button-small"
+            href="pages/recipes.html"
+          >
+            Manage recipes
+          </a>
+        </div>
+      </article>
+
+      <article class="ingredient-card">
+        <div class="ingredient-card-header">
+          <div>
+            <p>Conversion profiles</p>
+            <h2 id="dashboard-conversion-count">0</h2>
+          </div>
+
+          <span class="unit-badge">Advanced</span>
+        </div>
+
+        <div class="ingredient-card-body">
+          <p class="ingredient-notes">
+            Ingredients using density, preparation yield or
+            prepared item weight.
+          </p>
+
+          <a
+            class="button button-secondary button-small"
+            href="pages/ingredients.html"
+          >
+            Review conversions
+          </a>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <h2>Calculation workflow</h2>
+
+          <p>
+            Complete these stages for accurate preparation
+            quantities and costs.
+          </p>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <article class="ingredient-card">
+          <div class="ingredient-card-header">
+            <div>
+              <p>Stage 1</p>
+              <h3>Purchasing data</h3>
+            </div>
+
+            <span class="unit-badge">Required</span>
+          </div>
+
+          <div class="ingredient-card-body">
+            <p class="ingredient-notes">
+              Add brand, pack quantity, purchase unit, price
+              and supplier.
+            </p>
+
+            <a
+              class="button button-primary button-small"
+              href="pages/ingredients.html"
+            >
+              Add purchasing data
+            </a>
+          </div>
+        </article>
+
+        <article class="ingredient-card">
+          <div class="ingredient-card-header">
+            <div>
+              <p>Stage 2</p>
+              <h3>Preparation conversion</h3>
+            </div>
+
+            <span class="unit-badge">Accurate cost</span>
+          </div>
+
+          <div class="ingredient-card-body">
+            <p class="ingredient-notes">
+              Configure density, edible yield and prepared
+              weight per item.
+            </p>
+
+            <a
+              class="button button-primary button-small"
+              href="pages/ingredients.html"
+            >
+              Configure conversions
+            </a>
+          </div>
+        </article>
+
+        <article class="ingredient-card">
+          <div class="ingredient-card-header">
+            <div>
+              <p>Stage 3</p>
+              <h3>Recipe and batches</h3>
+            </div>
+
+            <span class="unit-badge">Required</span>
+          </div>
+
+          <div class="ingredient-card-body">
+            <p class="ingredient-notes">
+              Enter base quantities, preparation instructions
+              and production batches.
+            </p>
+
+            <a
+              class="button button-primary button-small"
+              href="pages/recipes.html"
+            >
+              Create recipe
+            </a>
+          </div>
+        </article>
+
+        <article class="ingredient-card">
+          <div class="ingredient-card-header">
+            <div>
+              <p>Stage 4</p>
+              <h3>Scale and calculate</h3>
+            </div>
+
+            <span class="unit-badge">Automatic</span>
+          </div>
+
+          <div class="ingredient-card-body">
+            <p class="ingredient-notes">
+              Scale by final output, item count or prepared
+              ingredient quantity.
+            </p>
+
+            <a
+              class="button button-primary button-small"
+              href="pages/recipes.html"
+            >
+              Calculate recipe
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <h2>Recent data</h2>
+
+          <p>
+            Latest saved ingredients and recipes.
+          </p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div>
+          <h3>Recent ingredients</h3>
+          <div id="recent-ingredients"></div>
+        </div>
+
+        <div>
+          <h3>Recent recipes</h3>
+          <div id="recent-recipes"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <h2>Data backup and restore</h2>
+
+          <p>
+            Export a JSON backup before clearing browser data
+            or changing devices.
+          </p>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          class="button button-primary"
+          id="export-data-button"
+          type="button"
+        >
+          Export JSON backup
+        </button>
+
+        <button
+          class="button button-secondary"
+          id="import-data-button"
+          type="button"
+        >
+          Import JSON backup
+        </button>
+
+        <input
+          id="import-data-file"
+          type="file"
+          accept=".json,application/json"
+          hidden
+        >
+
+        <button
+          class="button button-danger"
+          id="reset-data-button"
+          type="button"
+        >
+          Delete all local data
+        </button>
+      </div>
+
+      <p
+        class="field-error form-error"
+        id="data-management-error"
+      ></p>
+    </section>
   </main>
 
-  <footer>
-    <p>&copy; <span data-current-year></span> Recipe Ratio & Cost Manager</p>
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>
+        &copy; <span data-current-year></span>
+        Recipe Ratio &amp; Cost Manager
+      </p>
+
+      <p>
+        Local-first recipe planning and production costing.
+      </p>
+    </div>
   </footer>
 </body>
 </html>
