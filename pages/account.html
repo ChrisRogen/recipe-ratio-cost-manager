@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" data-auth-state="checking">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Sign in and synchronize Recipe Ratio & Cost Manager data across devices."
+    >
+
+    <title>Account & Cloud Sync | Recipe Ratio & Cost Manager</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/cloud-sync.css">
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+        defer
+    ></script>
+
+    <script src="../js/supabase-config.js" defer></script>
+    <script src="../js/auth-guard.js" defer></script>
+    <script src="../js/cloud-sync.js" defer></script>
+    <script src="../js/app.js" defer></script>
+    <script src="../js/account.js" defer></script>
+
+    <style>
+        html[data-auth-state="checking"] body,
+        html[data-auth-state="redirecting"] body {
+            visibility: hidden;
+        }
+    </style>
+</head>
+
+<body data-page="account">
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="../index.html">
+                <span class="brand-mark" aria-hidden="true">R</span>
+
+                <span class="brand-copy">
+                    <strong>Recipe Ratio</strong>
+                    <small>Cost Manager</small>
+                </span>
+            </a>
+
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="main-navigation"
+                aria-label="Open navigation"
+            >
+                <span aria-hidden="true">☰</span>
+            </button>
+
+            <nav
+                id="main-navigation"
+                class="site-nav"
+                aria-label="Main navigation"
+            >
+                <a href="../index.html">Dashboard</a>
+                <a href="recipes.html">Recipes</a>
+                <a href="calculator.html">Calculator</a>
+                <a href="ingredients.html">Ingredients</a>
+                <a href="business.html">Business</a>
+
+                <a
+                    href="account.html"
+                    aria-current="page"
+                >
+                    Account
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container page-main">
+        <section class="page-heading">
+            <div>
+                <p class="eyebrow">SECURE CLOUD STORAGE</p>
+                <h1>Account & Cloud Sync</h1>
+
+                <p>
+                    Sign in to back up your recipes, ingredients and business
+                    records and synchronize them between your laptop and mobile.
+                </p>
+            </div>
+        </section>
+
+        <section
+            class="card cloud-status-card"
+            aria-labelledby="cloud-status-heading"
+        >
+            <div class="section-heading-row">
+                <div>
+                    <h2 id="cloud-status-heading">Synchronization status</h2>
+
+                    <p>
+                        Local data remains available even if the internet
+                        connection is interrupted.
+                    </p>
+                </div>
+
+                <span
+                    id="cloud-status-badge"
+                    class="status-badge"
+                    data-status="starting"
+                >
+                    Starting
+                </span>
+            </div>
+
+            <div
+                id="cloud-status-message"
+                class="notice"
+                role="status"
+                aria-live="polite"
+            >
+                Connecting to the synchronization service…
+            </div>
+
+            <dl class="cloud-details">
+                <div>
+                    <dt>Connection</dt>
+                    <dd id="cloud-connection-value">Checking…</dd>
+                </div>
+
+                <div>
+                    <dt>Account</dt>
+                    <dd id="cloud-account-value">Not signed in</dd>
+                </div>
+
+                <div>
+                    <dt>Pending changes</dt>
+                    <dd id="cloud-pending-value">Checking…</dd>
+                </div>
+
+                <div>
+                    <dt>Last synchronized</dt>
+                    <dd id="cloud-last-synced-value">Not yet synchronized</dd>
+                </div>
+            </dl>
+        </section>
+
+        <section
+            id="signed-in-section"
+            class="card"
+            aria-labelledby="signed-in-heading"
+            hidden
+        >
+            <div class="section-heading-row">
+                <div>
+                    <h2 id="signed-in-heading">Signed-in account</h2>
+
+                    <p id="signed-in-email">
+                        Account details will appear here.
+                    </p>
+                </div>
+
+                <button
+                    id="sign-out-button"
+                    class="button secondary-button"
+                    type="button"
+                >
+                    Sign out
+                </button>
+            </div>
+        </section>
+
+        <section
+            id="migration-section"
+            class="card"
+            aria-labelledby="migration-heading"
+            hidden
+        >
+            <div class="card-heading">
+                <p class="eyebrow">FIRST-TIME MIGRATION</p>
+                <h2 id="migration-heading">Choose the data to keep</h2>
+
+                <p>
+                    The application will not automatically replace existing
+                    browser data during the first synchronization.
+                </p>
+            </div>
+
+            <div class="notice warning-notice">
+                <strong>Make a backup before continuing.</strong>
+
+                <p>
+                    Upload sends this browser's current data to Supabase.
+                    Download replaces this browser's data with the cloud copy
+                    after creating an automatic local backup.
+                </p>
+            </div>
+
+            <div class="data-summary-grid">
+                <article class="summary-card">
+                    <h3>Data in this browser</h3>
+
+                    <dl>
+                        <div>
+                            <dt>Ingredients</dt>
+                            <dd id="local-ingredient-count">0</dd>
+                        </div>
+
+                        <div>
+                            <dt>Recipes</dt>
+                            <dd id="local-recipe-count">0</dd>
+                        </div>
+
+                        <div>
+                            <dt>Business records</dt>
+                            <dd id="local-business-count">0</dd>
+                        </div>
+                    </dl>
+                </article>
+
+                <article class="summary-card">
+                    <h3>Cloud information</h3>
+
+                    <p id="cloud-information-message">
+                        Checking for an existing cloud backup…
+                    </p>
+
+                    <dl>
+                        <div>
+                            <dt>Cloud backup</dt>
+                            <dd id="cloud-backup-value">Checking…</dd>
+                        </div>
+
+                        <div>
+                            <dt>Last updated</dt>
+                            <dd id="cloud-updated-value">Not available</dd>
+                        </div>
+                    </dl>
+                </article>
+            </div>
+
+            <div class="button-row wrap-buttons">
+                <button
+                    id="backup-before-sync-button"
+                    class="button secondary-button"
+                    type="button"
+                >
+                    Download JSON backup
+                </button>
+
+                <button
+                    id="upload-local-button"
+                    class="button primary-button"
+                    type="button"
+                >
+                    Upload this browser's data
+                </button>
+
+                <button
+                    id="download-cloud-button"
+                    class="button secondary-button"
+                    type="button"
+                >
+                    Download cloud data
+                </button>
+            </div>
+        </section>
+
+        <section
+            id="sync-controls-section"
+            class="card"
+            aria-labelledby="sync-controls-heading"
+            hidden
+        >
+            <div class="card-heading">
+                <h2 id="sync-controls-heading">Cloud controls</h2>
+
+                <p>
+                    Normal changes synchronize automatically. These controls
+                    are available for backup, recovery and manual checks.
+                </p>
+            </div>
+
+            <div class="button-row wrap-buttons">
+                <button
+                    id="sync-now-button"
+                    class="button primary-button"
+                    type="button"
+                >
+                    Sync now
+                </button>
+
+                <button
+                    id="restore-cloud-button"
+                    class="button secondary-button"
+                    type="button"
+                >
+                    Restore latest cloud data
+                </button>
+
+                <button
+                    id="download-backup-button"
+                    class="button secondary-button"
+                    type="button"
+                >
+                    Download JSON backup
+                </button>
+            </div>
+        </section>
+
+        <section class="card" aria-labelledby="sync-information-heading">
+            <div class="card-heading">
+                <h2 id="sync-information-heading">How your data is protected</h2>
+            </div>
+
+            <ul class="information-list">
+                <li>
+                    Changes are saved in this browser before being uploaded.
+                </li>
+
+                <li>
+                    Supabase Row Level Security restricts the cloud record to
+                    your signed-in account.
+                </li>
+
+                <li>
+                    The secret database key and database password are never
+                    stored in the website.
+                </li>
+
+                <li>
+                    A local backup is created before cloud data replaces the
+                    current browser data.
+                </li>
+
+                <li>
+                    Realtime synchronization receives changes made on another
+                    signed-in device.
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>
+                &copy;
+                <span data-current-year></span>
+                Recipe Ratio & Cost Manager
+            </p>
+
+            <p>
+                Local-first storage with protected cloud synchronization.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,272 @@
+/* =========================================================
+   Recipe Ratio & Cost Manager
+   Account and cloud synchronization page
+   ========================================================= */
+
+[hidden] {
+    display: none !important;
+}
+
+.cloud-status-card {
+    overflow: hidden;
+}
+
+.cloud-status-card .notice {
+    margin-top: 1rem;
+}
+
+.section-heading-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.section-heading-row h2,
+.card-heading h2 {
+    margin-top: 0;
+    margin-bottom: 0.35rem;
+}
+
+.section-heading-row p,
+.card-heading p {
+    margin-top: 0;
+}
+
+.status-badge {
+    display: inline-flex;
+    min-width: 7rem;
+    min-height: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 0.8rem;
+    border: 1px solid #cbd5cf;
+    border-radius: 999px;
+    background: #f2f5f3;
+    color: #34443b;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.status-badge[data-status="synced"],
+.status-badge[data-status="realtime-ready"],
+.status-badge[data-status="realtime-updated"],
+.status-badge[data-status="online"] {
+    border-color: #a8d8bd;
+    background: #e7f5ed;
+    color: #075b35;
+}
+
+.status-badge[data-status="uploading"],
+.status-badge[data-status="downloading"],
+.status-badge[data-status="signing-in"],
+.status-badge[data-status="local-change"] {
+    border-color: #b8cee5;
+    background: #eaf3fb;
+    color: #174f7a;
+}
+
+.status-badge[data-status="offline"],
+.status-badge[data-status="cloud-empty"],
+.status-badge[data-status="empty-local"] {
+    border-color: #e6cb8d;
+    background: #fff7df;
+    color: #795400;
+}
+
+.status-badge[data-status="conflict"],
+.status-badge[data-status="upload-error"],
+.status-badge[data-status="download-error"],
+.status-badge[data-status="session-error"],
+.status-badge[data-status="sign-in-error"],
+.status-badge[data-status="sign-out-error"],
+.status-badge[data-status="library-missing"] {
+    border-color: #efaaa3;
+    background: #fff0ee;
+    color: #a11e16;
+}
+
+.notice[data-type="information"] {
+    border-color: #b9d6c5;
+    background: #f0f8f3;
+    color: #194f35;
+}
+
+.notice[data-type="warning"],
+.warning-notice {
+    border-color: #e5cb8b;
+    background: #fff8e6;
+    color: #684d0a;
+}
+
+.notice[data-type="error"] {
+    border-color: #efaaa3;
+    background: #fff0ee;
+    color: #991e18;
+}
+
+.warning-notice strong {
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+.warning-notice p {
+    margin: 0;
+}
+
+.cloud-details {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin: 1.25rem 0 0;
+    overflow: hidden;
+    border: 1px solid #d7dfda;
+    border-radius: 0.75rem;
+    background: #d7dfda;
+}
+
+.cloud-details > div {
+    min-width: 0;
+    padding: 1rem;
+    background: #ffffff;
+}
+
+.cloud-details dt {
+    margin-bottom: 0.35rem;
+    color: #607067;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.cloud-details dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: #13231a;
+    font-weight: 700;
+}
+
+.data-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.summary-card {
+    padding: 1.25rem;
+    border: 1px solid #d7dfda;
+    border-radius: 0.8rem;
+    background: #fafcfb;
+}
+
+.summary-card h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.summary-card > p {
+    min-height: 2.8rem;
+    color: #53645a;
+}
+
+.summary-card dl {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+}
+
+.summary-card dl > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid #dde4e0;
+}
+
+.summary-card dt {
+    color: #53645a;
+}
+
+.summary-card dd {
+    margin: 0;
+    color: #075b35;
+    font-weight: 800;
+}
+
+.form-message {
+    margin-top: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 0.6rem;
+}
+
+.error-message {
+    border: 1px solid #efaaa3;
+    background: #fff0ee;
+    color: #991e18;
+}
+
+.wrap-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.information-list {
+    display: grid;
+    gap: 0.8rem;
+    margin-bottom: 0;
+    padding-left: 1.3rem;
+}
+
+.information-list li {
+    padding-left: 0.25rem;
+}
+
+button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+/* Tablet layout */
+@media (max-width: 900px) {
+    .cloud-details {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Mobile layout */
+@media (max-width: 650px) {
+    .section-heading-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .status-badge {
+        align-self: flex-start;
+    }
+
+    .cloud-details {
+        grid-template-columns: 1fr;
+    }
+
+    .data-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wrap-buttons {
+        flex-direction: column;
+    }
+
+    .wrap-buttons .button {
+        width: 100%;
+    }
+
+    #sign-out-button {
+        width: 100%;
+    }
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Sign in to Recipe Ratio & Cost Manager."
+    >
+
+    <title>Sign In | Recipe Ratio & Cost Manager</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/login.css">
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+        defer
+    ></script>
+    <script src="../js/supabase-config.js" defer></script>
+    <script src="../js/login.js" defer></script>
+</head>
+
+<body class="login-page" data-page="login">
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="brand" aria-label="Recipe Ratio Cost Manager">
+                <span class="brand-mark" aria-hidden="true">R</span>
+
+                <span class="brand-copy">
+                    <strong>Recipe Ratio</strong>
+                    <small>Cost Manager</small>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="login-main">
+        <section class="login-card" aria-labelledby="login-heading">
+            <p class="eyebrow">SECURE ACCOUNT ACCESS</p>
+            <h1 id="login-heading">Sign in</h1>
+
+            <p class="login-introduction">
+                Use your Recipe Ratio account to access the website and your
+                protected Supabase cloud backup.
+            </p>
+
+            <form id="website-login-form" class="login-form" novalidate>
+                <div class="form-field">
+                    <label for="login-email">Email address</label>
+
+                    <input
+                        id="login-email"
+                        name="email"
+                        type="email"
+                        autocomplete="username"
+                        placeholder="you@example.com"
+                        required
+                        autofocus
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="login-password">Password</label>
+
+                    <input
+                        id="login-password"
+                        name="password"
+                        type="password"
+                        autocomplete="current-password"
+                        placeholder="Enter your password"
+                        minlength="6"
+                        required
+                    >
+                </div>
+
+                <p
+                    id="login-message"
+                    class="login-message"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                ></p>
+
+                <button
+                    id="login-button"
+                    class="button primary-button login-button"
+                    type="submit"
+                >
+                    Sign in
+                </button>
+            </form>
+
+            <p class="login-help">
+                Your password is sent directly to Supabase authentication and
+                is never stored in the website's recipe data.
+            </p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; 2026 Recipe Ratio &amp; Cost Manager</p>
+            <p>Protected account access and cloud synchronization.</p>
+        </div>
+    </footer>
+</body>
+</html>
