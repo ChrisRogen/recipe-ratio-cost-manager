@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-auth-state="checking">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,22 @@
   <link rel="stylesheet" href="../css/styles.css">
   <script src="../js/app.js?v=20260831-2" defer></script>
   <script src="../js/calculator.js?v=20260831-2" defer></script>
-</head>
+
+    <!-- Supabase cloud synchronization -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+        defer
+    ></script>
+    <script src="../js/supabase-config.js" defer></script>
+    <script src="../js/auth-guard.js" defer></script>
+    <script src="../js/cloud-sync.js" defer></script>
+    <script src="../js/cloud-bootstrap.js" defer></script>
+    <style>
+        html[data-auth-state="checking"] body,
+        html[data-auth-state="redirecting"] body {
+            visibility: hidden;
+        }
+    </style></head>
 <body data-page="calculator">
   <header class="site-header">
     <div class="header-inner">
@@ -17,7 +32,7 @@
         <span><strong>Recipe Ratio</strong><small>Cost Manager</small></span>
       </a>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" data-menu-toggle>
-        <span aria-hidden="true">☰</span><span class="sr-only">Toggle navigation</span>
+        <span aria-hidden="true">â˜°</span><span class="sr-only">Toggle navigation</span>
       </button>
       <nav id="main-navigation" class="main-navigation" aria-label="Main navigation" data-navigation>
         <a href="../index.html">Dashboard</a>
@@ -25,7 +40,9 @@
         <a href="calculator.html" aria-current="page">Calculator</a>
         <a href="business.html">Business</a>
         <a href="ingredients.html">Ingredients</a>
-      </nav>
+
+                <a href="account.html">Account</a>
+            </nav>
     </div>
   </header>
 
