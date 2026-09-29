@@ -2,7 +2,11 @@
 <html lang="en" data-auth-state="checking">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <meta
     name="description"
@@ -12,29 +16,39 @@
   <title>Dashboard | Recipe Ratio & Cost Manager</title>
 
   <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Supabase library -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    defer
+  ></script>
+
+  <!-- Authentication and cloud synchronization -->
+  <script src="js/supabase-config.js" defer></script>
+  <script src="js/auth-guard.js" defer></script>
+  <script src="js/cloud-sync.js" defer></script>
+  <script src="js/cloud-bootstrap.js" defer></script>
+
+  <!-- Application scripts -->
   <script src="js/app.js" defer></script>
   <script src="js/dashboard.js" defer></script>
 
-    <!-- Supabase cloud synchronization -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-        defer
-    ></script>
-    <script src="js/supabase-config.js" defer></script>
-    <script src="js/auth-guard.js" defer></script>
-    <script src="js/cloud-sync.js" defer></script>
-    <script src="js/cloud-bootstrap.js" defer></script>
-    <style>
-        html[data-auth-state="checking"] body,
-        html[data-auth-state="redirecting"] body {
-            visibility: hidden;
-        }
-    </style></head>
+  <style>
+    html[data-auth-state="checking"] body,
+    html[data-auth-state="redirecting"] body {
+      visibility: hidden;
+    }
+  </style>
+</head>
 
 <body data-page="dashboard">
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="index.html">
+      <a
+        class="brand"
+        href="index.html"
+        aria-label="Recipe Ratio dashboard"
+      >
         <span class="brand-mark" aria-hidden="true">R</span>
 
         <span>
@@ -48,9 +62,10 @@
         type="button"
         aria-expanded="false"
         aria-controls="main-navigation"
+        aria-label="Open navigation menu"
         data-menu-toggle
       >
-        <span aria-hidden="true">â˜°</span>
+        <span aria-hidden="true">☰</span>
         <span class="sr-only">Toggle navigation</span>
       </button>
 
@@ -64,13 +79,26 @@
           Dashboard
         </a>
 
-        <a href="pages/recipes.html">Recipes</a>
-        <a href="pages/calculator.html">Calculator</a>
-        <a href="pages/business.html">Business</a>
-        <a href="pages/ingredients.html">Ingredients</a>
+        <a href="pages/recipes.html">
+          Recipes
+        </a>
 
-                <a href="pages/account.html">Account</a>
-            </nav>
+        <a href="pages/calculator.html">
+          Calculator
+        </a>
+
+        <a href="pages/business.html">
+          Business
+        </a>
+
+        <a href="pages/ingredients.html">
+          Ingredients
+        </a>
+
+        <a href="pages/account.html">
+          Account
+        </a>
+      </nav>
     </div>
   </header>
 
@@ -78,6 +106,7 @@
     <section class="page-heading">
       <div>
         <p class="eyebrow">Recipe workspace</p>
+
         <h1>Dashboard</h1>
 
         <p>
@@ -98,6 +127,7 @@
       class="card-grid"
       aria-label="Application summary"
     >
+      <!-- Ingredients -->
       <article class="ingredient-card">
         <div class="ingredient-card-header">
           <div>
@@ -122,6 +152,7 @@
         </div>
       </article>
 
+      <!-- Business records -->
       <article class="ingredient-card">
         <div class="ingredient-card-header">
           <div>
@@ -146,6 +177,7 @@
         </div>
       </article>
 
+      <!-- Purchasing options -->
       <article class="ingredient-card">
         <div class="ingredient-card-header">
           <div>
@@ -170,6 +202,7 @@
         </div>
       </article>
 
+      <!-- Recipes -->
       <article class="ingredient-card">
         <div class="ingredient-card-header">
           <div>
@@ -194,6 +227,7 @@
         </div>
       </article>
 
+      <!-- Conversion profiles -->
       <article class="ingredient-card">
         <div class="ingredient-card-header">
           <div>
@@ -220,6 +254,7 @@
       </article>
     </section>
 
+    <!-- Calculation workflow -->
     <section class="panel">
       <div class="panel-heading">
         <div>
@@ -233,6 +268,7 @@
       </div>
 
       <div class="card-grid">
+        <!-- Stage 1 -->
         <article class="ingredient-card">
           <div class="ingredient-card-header">
             <div>
@@ -258,6 +294,7 @@
           </div>
         </article>
 
+        <!-- Stage 2 -->
         <article class="ingredient-card">
           <div class="ingredient-card-header">
             <div>
@@ -283,6 +320,7 @@
           </div>
         </article>
 
+        <!-- Stage 3 -->
         <article class="ingredient-card">
           <div class="ingredient-card-header">
             <div>
@@ -308,6 +346,7 @@
           </div>
         </article>
 
+        <!-- Stage 4 -->
         <article class="ingredient-card">
           <div class="ingredient-card-header">
             <div>
@@ -326,7 +365,7 @@
 
             <a
               class="button button-primary button-small"
-              href="pages/recipes.html"
+              href="pages/calculator.html"
             >
               Calculate recipe
             </a>
@@ -335,6 +374,7 @@
       </div>
     </section>
 
+    <!-- Recent data -->
     <section class="panel">
       <div class="panel-heading">
         <div>
@@ -359,6 +399,7 @@
       </div>
     </section>
 
+    <!-- Data management -->
     <section class="panel">
       <div class="panel-heading">
         <div>
@@ -407,6 +448,8 @@
       <p
         class="field-error form-error"
         id="data-management-error"
+        role="alert"
+        aria-live="assertive"
       ></p>
     </section>
   </main>
@@ -422,7 +465,8 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <p>
-        &copy; <span data-current-year></span>
+        &copy;
+        <span data-current-year></span>
         Recipe Ratio &amp; Cost Manager
       </p>
 

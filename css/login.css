@@ -89,3 +89,112 @@
 .login-page .site-footer {
     margin-top: 0;
 }
+
+/* Premium sign-in experience */
+
+.login-page {
+    position: relative;
+    isolation: isolate;
+    overflow-x: hidden;
+    background:
+        radial-gradient(circle at 15% 20%, rgb(8 122 75 / 20%), transparent 25rem),
+        radial-gradient(circle at 85% 78%, rgb(242 163 59 / 15%), transparent 23rem),
+        linear-gradient(135deg, #edf8f2 0%, #f9fbfa 46%, #eef6f1 100%);
+}
+
+.login-page::before,
+.login-page::after {
+    position: fixed;
+    z-index: -1;
+    border: 1px solid rgb(8 122 75 / 12%);
+    border-radius: 50%;
+    content: "";
+    pointer-events: none;
+}
+
+.login-page::before {
+    top: 16%;
+    left: 8%;
+    width: 8rem;
+    height: 8rem;
+    animation: login-orbit 9s ease-in-out infinite alternate;
+}
+
+.login-page::after {
+    right: 7%;
+    bottom: 14%;
+    width: 12rem;
+    height: 12rem;
+    animation: login-orbit 11s ease-in-out 1s infinite alternate-reverse;
+}
+
+.login-main {
+    width: min(calc(100% - 2rem), 34rem);
+    padding-block: clamp(2.5rem, 8vh, 6rem);
+}
+
+.login-card {
+    position: relative;
+    padding: clamp(1.5rem, 6vw, 3rem);
+    overflow: hidden;
+    border-color: rgb(185 206 193 / 76%);
+    border-radius: 26px;
+    background: rgb(255 255 255 / 84%);
+    box-shadow: 0 30px 80px rgb(7 55 32 / 16%), inset 0 1px rgb(255 255 255 / 85%);
+    backdrop-filter: blur(22px) saturate(140%);
+    animation: login-card-enter 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.login-card::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--colour-primary), #19a86a, var(--colour-accent));
+    content: "";
+}
+
+.login-card h1 {
+    color: var(--colour-primary-deep);
+    font-size: clamp(2.25rem, 8vw, 3.25rem);
+    letter-spacing: -0.045em;
+}
+
+.login-form { gap: 1.15rem; }
+.login-form input {
+    min-height: 3.2rem;
+    padding-inline: 1rem;
+    border-radius: 12px;
+}
+
+.login-button {
+    min-height: 3.2rem;
+    margin-top: 0.4rem;
+    border-radius: 12px;
+    font-size: 1rem;
+}
+
+.login-help {
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--colour-border);
+}
+
+@keyframes login-card-enter {
+    from { opacity: 0; transform: translateY(26px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes login-orbit {
+    from { transform: translate3d(0, 0, 0) rotate(0deg); }
+    to { transform: translate3d(1.5rem, -1rem, 0) rotate(18deg); }
+}
+
+@media (max-width: 520px) {
+    .login-main { align-items: start; padding-block: 1.5rem 3rem; }
+    .login-card { border-radius: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .login-page::before, .login-page::after { display: none; }
+}
